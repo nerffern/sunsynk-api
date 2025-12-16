@@ -10,6 +10,8 @@ import base64
 import hashlib
 import requests
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 
@@ -126,14 +128,14 @@ class SunsynkAPI:
 # MAIN
 # ============================================================
 def main():
-    # USERNAME = "fpires94@gmail.com"
-    # PASSWORD = "iI7itbc4m!"
-    #
-    # INVERTER_SN = "2506303417"
-
     USERNAME = os.getenv('SUNSYNK_USERNAME')
     PASSWORD = os.getenv('SUNSYNK_PASSWORD')
     INVERTER_SN = os.getenv('SUNSYNK_INVERTER_SN')
+
+    if not USERNAME or not PASSWORD or not INVERTER_SN:
+        raise RuntimeError(
+            "Missing env vars: SUNSYNK_USERNAME, SUNSYNK_PASSWORD, SUNSYNK_INVERTER_SN"
+        )
 
     api = SunsynkAPI(USERNAME, PASSWORD)
 
