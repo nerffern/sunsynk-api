@@ -88,6 +88,10 @@ const renderData = (payload) => {
   setText('grid-export-today', formatNumber(payload.grid_export_today, 'kWh'));
   setText('grid-import-value', `Cost: ${formatCurrency(payload.grid_import_value, payload.currency || 'R')}`);
   setText('grid-export-value', `Value: ${formatCurrency(payload.grid_export_value, payload.currency || 'R')}`);
+  setText(
+    'grid-rate',
+    `Rate: ${formatCurrency(payload.grid_import_rate, payload.currency || 'R')}/kWh`
+  );
   setText('last-updated', payload.last_updated || 'pending');
 
   setArrow(

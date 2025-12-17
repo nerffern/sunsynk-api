@@ -128,6 +128,10 @@ class SunsynkAPI:
 
 FETCH_INTERVAL_SECONDS = 60
 
+# Optional cost assumptions (per kWh)
+GRID_IMPORT_RATE = float(os.getenv("GRID_IMPORT_RATE", "4"))
+GRID_EXPORT_RATE = float(os.getenv("GRID_EXPORT_RATE", str(GRID_IMPORT_RATE)))
+
 USERNAME = os.getenv("SUNSYNK_USERNAME")
 PASSWORD = os.getenv("SUNSYNK_PASSWORD")
 INVERTER_SN = os.getenv("SUNSYNK_INVERTER_SN")
@@ -192,6 +196,36 @@ def _build_payload(summary: Dict[str, Any], flow: Dict[str, Any]) -> Dict[str, A
 
     currency = summary.get("currency", {}).get("text", "R")
 
+    grid_import_today = _first_value(
+        summary,
+        [
+            "buyToday",
+            "gridBuyToday",
+            "importEnergyToday",
+            "gridImportToday",
+        ],
+        0,
+    )
+    grid_export_today = _first_value(
+        summary,
+        ["sellToday", "feedInEnergyToday", "exportEnergyToday", "gridSellToday"],
+        0,
+    )
+
+    grid_import_value = _first_value(
+        summary, ["buyIncome", "gridCostToday", "importCostToday"], 0
+    )
+    grid_export_value = _first_value(
+        summary, ["sellIncome", "feedInIncomeToday", "exportIncomeToday"], 0
+    )
+
+    # Compute fallback values if the API does not provide money totals
+    if not grid_import_value and grid_import_today is not None:
+        grid_import_value = round(grid_import_today * GRID_IMPORT_RATE, 2)
+
+    if not grid_export_value and grid_export_today is not None:
+        grid_export_value = round(grid_export_today * GRID_EXPORT_RATE, 2)
+
     data = {
         "plant_name": _cache.get("plant_name", "Plant"),
         "pv_watts": pv_total,
@@ -207,27 +241,12 @@ def _build_payload(summary: Dict[str, Any], flow: Dict[str, Any]) -> Dict[str, A
         "etotal": summary.get("etotal"),
         "currency": currency,
         "income_today": _first_value(summary, ["incomeToday", "income"], 0),
-        "grid_import_today": _first_value(
-            summary,
-            [
-                "buyToday",
-                "gridBuyToday",
-                "importEnergyToday",
-                "gridImportToday",
-            ],
-            0,
-        ),
-        "grid_export_today": _first_value(
-            summary,
-            ["sellToday", "feedInEnergyToday", "exportEnergyToday", "gridSellToday"],
-            0,
-        ),
-        "grid_import_value": _first_value(
-            summary, ["buyIncome", "gridCostToday", "importCostToday"], 0
-        ),
-        "grid_export_value": _first_value(
-            summary, ["sellIncome", "feedInIncomeToday", "exportIncomeToday"], 0
-        ),
+        "grid_import_today": grid_import_today,
+        "grid_export_today": grid_export_today,
+        "grid_import_value": grid_import_value,
+        "grid_export_value": grid_export_value,
+        "grid_import_rate": GRID_IMPORT_RATE,
+        "grid_export_rate": GRID_EXPORT_RATE,
         "last_updated": summary.get("updateAt") or flow.get("updateAt"),
     }
     return data
