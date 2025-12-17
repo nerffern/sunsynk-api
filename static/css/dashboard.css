@@ -1,0 +1,60 @@
+body {
+    background: radial-gradient(circle at top left, #1b2533, #0f1622 60%);
+    min-height: 100vh;
+}
+
+.power-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.power-node {
+    grid-column: span 1;
+}
+
+.power-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.2));
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.power-card.highlight {
+    border-color: rgba(0, 196, 255, 0.5);
+    box-shadow: 0 16px 45px rgba(0, 196, 255, 0.2);
+}
+
+.power-connector {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.info-card {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    height: 100%;
+}
+
+#status-banner {
+    position: sticky;
+    top: 70px;
+    z-index: 1050;
+}
+
+@media (max-width: 992px) {
+    .power-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .power-connector {
+        display: none;
+    }
+}

@@ -1,10 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sunsynk Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
-<body>
+<body class="bg-dark text-light">
+<nav class="navbar navbar-dark bg-black shadow-sm sticky-top">
+    <div class="container-fluid">
+        <span class="navbar-brand">Sunsynk Live Dashboard</span>
+        <span class="text-secondary small">Refreshes every {{ refresh_interval }}s</span>
+    </div>
+</nav>
 
+<main class="container py-4">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-3">
+        <div>
+            <p class="text-muted mb-1">Plant</p>
+            <h1 class="display-6 mb-0" id="plant-name">Loading…</h1>
+        </div>
+        <div class="text-lg-end">
+            <p class="text-muted mb-1">Last Update</p>
+            <p class="fs-5 mb-0" id="last-updated">--</p>
+        </div>
+    </div>
+
+    <div id="status-banner" class="alert alert-danger d-none" role="alert"></div>
+
+    <section class="power-grid mb-4">
+        <div class="power-node">
+            <div class="power-card">
+                <p class="text-uppercase small text-secondary mb-1">PV</p>
+                <p class="display-6 fw-semibold mb-1" id="pv-watts">-- W</p>
+                <p class="text-muted small" id="pv-direction">Generating</p>
+            </div>
+        </div>
+        <div class="power-connector" id="pv-arrow">→</div>
+        <div class="power-node">
+            <div class="power-card">
+                <p class="text-uppercase small text-secondary mb-1">Battery</p>
+                <p class="display-6 fw-semibold mb-1" id="battery-watts">-- W</p>
+                <p class="text-muted small" id="battery-direction">--</p>
+                <div class="badge bg-secondary" id="battery-soc">SOC --%</div>
+            </div>
+        </div>
+        <div class="power-connector" id="battery-arrow">→</div>
+        <div class="power-node">
+            <div class="power-card">
+                <p class="text-uppercase small text-secondary mb-1">Grid</p>
+                <p class="display-6 fw-semibold mb-1" id="grid-watts">-- W</p>
+                <p class="text-muted small" id="grid-direction">--</p>
+            </div>
+        </div>
+        <div class="power-connector" id="grid-arrow">→</div>
+        <div class="power-node">
+            <div class="power-card highlight">
+                <p class="text-uppercase small text-secondary mb-1">Load</p>
+                <p class="display-6 fw-semibold mb-1" id="load-watts">-- W</p>
+                <p class="text-muted small">To home</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="info-card">
+                <p class="text-uppercase small text-secondary mb-1">Energy Today</p>
+                <p class="fs-1 mb-1" id="etoday">-- kWh</p>
+                <p class="text-muted small">Current day production</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="info-card">
+                <p class="text-uppercase small text-secondary mb-1">Total Generated</p>
+                <p class="fs-1 mb-1" id="etotal">-- kWh</p>
+                <p class="text-muted small">Lifetime inverter output</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="info-card">
+                <p class="text-uppercase small text-secondary mb-1">Income / Savings Today</p>
+                <p class="fs-1 mb-1" id="income-today">--</p>
+                <p class="text-muted small">Based on Sunsynk currency</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="info-card">
+                <p class="text-uppercase small text-secondary mb-1">Currency</p>
+                <p class="fs-1 mb-1" id="currency">--</p>
+                <p class="text-muted small">Used for grid totals</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="info-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <p class="text-uppercase small text-secondary mb-0">Grid Import Today</p>
+                    <span class="badge bg-secondary">kWh</span>
+                </div>
+                <p class="fs-1 mb-1" id="grid-import-today">--</p>
+                <p class="text-muted small mb-0">What you pulled from the grid today.</p>
+                <p class="text-muted small" id="grid-import-value">Cost: --</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="info-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <p class="text-uppercase small text-secondary mb-0">Grid Export Today</p>
+                    <span class="badge bg-secondary">kWh</span>
+                </div>
+                <p class="fs-1 mb-1" id="grid-export-today">--</p>
+                <p class="text-muted small mb-0">What you fed back to the grid today.</p>
+                <p class="text-muted small" id="grid-export-value">Value: --</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="info-card mb-4">
+        <h2 class="h5 mb-3">Next steps</h2>
+        <p class="text-muted mb-1">This layout leaves room for future integrations:</p>
+        <ul class="text-muted mb-0">
+            <li>Publish these metrics to Home Assistant via MQTT.</li>
+            <li>Expose a Prometheus scrape endpoint.</li>
+            <li>Persist historical samples to MySQL for reporting.</li>
+        </ul>
+    </section>
+</main>
+
+<script>const DASHBOARD_REFRESH = {{ refresh_interval * 1000 }};</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
