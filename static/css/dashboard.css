@@ -26,16 +26,19 @@ main > * {
 
 .power-layout {
     display: grid;
-    grid-template-columns: 1fr 240px 1fr;
-    grid-template-rows: repeat(3, auto);
+    grid-template-columns: repeat(3, minmax(270px, 1fr));
+    grid-template-rows: repeat(3, minmax(180px, auto));
     grid-template-areas:
         ". grid ."
         "pv inverter load"
         ". battery .";
-    align-items: center;
+    align-items: stretch;
     justify-items: center;
-    gap: 1.25rem 2rem;
+    gap: 1.5rem 2.75rem;
     position: relative;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-inline: clamp(0.5rem, 2vw, 1.75rem);
 }
 
 #pv-card { grid-area: pv; }
@@ -45,7 +48,7 @@ main > * {
 .inverter-card { grid-area: inverter; }
 
 .power-node {
-    width: 100%;
+    width: min(100%, 430px);
 }
 
 .power-card {
@@ -162,27 +165,27 @@ main > * {
 }
 
 .flow-arrow.horizontal.from-pv {
-    left: 9%;
+    left: 32%;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 
 .flow-arrow.horizontal.to-load {
-    right: 8%;
+    left: 68%;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 
 .flow-arrow.vertical.from-grid {
-    top: 6%;
+    top: 8%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
 }
 
 .flow-arrow.vertical.from-battery {
-    bottom: 4%;
+    bottom: 6%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 50%);
 }
 
 .info-card {
