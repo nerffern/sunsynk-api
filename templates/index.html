@@ -32,28 +32,75 @@
     <section class="power-layout mb-4">
         <div class="power-node" id="pv-card">
             <div class="power-card">
-                <p class="text-uppercase small text-secondary mb-1">PV</p>
+                <div class="power-card-header">
+                    <p class="text-uppercase small text-secondary mb-0">PV</p>
+                    <span class="node-icon pv-icon" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" role="presentation">
+                            <circle cx="32" cy="32" r="13" fill="none" stroke-width="3.4"></circle>
+                            <line x1="32" y1="10" x2="32" y2="3" stroke-width="3.4"></line>
+                            <line x1="32" y1="61" x2="32" y2="54" stroke-width="3.4"></line>
+                            <line x1="10" y1="32" x2="3" y2="32" stroke-width="3.4"></line>
+                            <line x1="61" y1="32" x2="54" y2="32" stroke-width="3.4"></line>
+                            <line x1="15.5" y1="15.5" x2="10.5" y2="10.5" stroke-width="3.4"></line>
+                            <line x1="48.5" y1="48.5" x2="53.5" y2="53.5" stroke-width="3.4"></line>
+                            <line x1="15.5" y1="48.5" x2="10.5" y2="53.5" stroke-width="3.4"></line>
+                            <line x1="48.5" y1="15.5" x2="53.5" y2="10.5" stroke-width="3.4"></line>
+                        </svg>
+                    </span>
+                </div>
                 <p class="display-6 fw-semibold mb-1" id="pv-watts">-- W</p>
                 <p class="text-muted small" id="pv-direction">Generating</p>
             </div>
         </div>
         <div class="power-node" id="grid-card">
             <div class="power-card">
-                <p class="text-uppercase small text-secondary mb-1">Grid</p>
+                <div class="power-card-header">
+                    <p class="text-uppercase small text-secondary mb-0">Grid</p>
+                    <span class="node-icon grid-icon" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" role="presentation">
+                            <rect x="20" y="6" width="24" height="10" rx="3" fill="none" stroke-width="3.4"></rect>
+                            <rect x="14" y="20" width="36" height="24" rx="4" fill="none" stroke-width="3.4"></rect>
+                            <line x1="24" y1="44" x2="24" y2="58" stroke-width="3.4"></line>
+                            <line x1="40" y1="44" x2="40" y2="58" stroke-width="3.4"></line>
+                            <line x1="14" y1="31" x2="4" y2="31" stroke-width="3.4"></line>
+                            <line x1="60" y1="31" x2="50" y2="31" stroke-width="3.4"></line>
+                        </svg>
+                    </span>
+                </div>
                 <p class="display-6 fw-semibold mb-1" id="grid-watts">-- W</p>
                 <p class="text-muted small" id="grid-direction">--</p>
             </div>
         </div>
         <div class="power-node" id="load-card">
             <div class="power-card highlight">
-                <p class="text-uppercase small text-secondary mb-1">Load</p>
+                <div class="power-card-header">
+                    <p class="text-uppercase small text-secondary mb-0">Load</p>
+                    <span class="node-icon load-icon" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" role="presentation">
+                            <path d="M12 30 L32 12 L52 30 V56 H12 Z" fill="none" stroke-width="3.4"></path>
+                            <rect x="26" y="36" width="12" height="20" rx="2" fill="none" stroke-width="3.4"></rect>
+                            <line x1="20" y1="56" x2="44" y2="56" stroke-width="3.4"></line>
+                        </svg>
+                    </span>
+                </div>
                 <p class="display-6 fw-semibold mb-1" id="load-watts">-- W</p>
                 <p class="text-muted small">To home</p>
             </div>
         </div>
         <div class="power-node" id="battery-card">
             <div class="power-card">
-                <p class="text-uppercase small text-secondary mb-1">Battery</p>
+                <div class="power-card-header">
+                    <p class="text-uppercase small text-secondary mb-0">Battery</p>
+                    <span class="node-icon battery-icon" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" role="presentation">
+                            <rect x="12" y="16" width="36" height="32" rx="5" fill="none" stroke-width="3.4"></rect>
+                            <rect x="48" y="26" width="4" height="12" rx="1.2" fill="none" stroke-width="3.4"></rect>
+                            <rect x="18" y="26" width="18" height="12" rx="2" fill="none" stroke-width="3.4"></rect>
+                            <line x1="24" y1="22" x2="24" y2="16" stroke-width="3.4"></line>
+                            <line x1="32" y1="22" x2="32" y2="16" stroke-width="3.4"></line>
+                        </svg>
+                    </span>
+                </div>
                 <p class="display-6 fw-semibold mb-1" id="battery-watts">-- W</p>
                 <p class="text-muted small" id="battery-direction">--</p>
                 <div class="badge bg-secondary" id="battery-soc">SOC --%</div>
