@@ -17,10 +17,44 @@ const formatCurrency = (value, currency) => {
   return `${currency} ${Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 };
 
-const setArrow = (id, direction) => {
+const setArrow = (id, flow, orientation = 'horizontal', label) => {
   const el = document.getElementById(id);
   if (!el) return;
-  el.textContent = direction === 'Importing' || direction === 'Discharging' ? '→' : direction === 'Charging' || direction === 'Exporting' ? '←' : '·';
+
+  const icon = el.querySelector('.arrow-icon');
+  const text = el.querySelector('.arrow-label');
+
+  let symbol = '·';
+  const forwardSymbol =
+    orientation === 'vertical'
+      ? '↓'
+      : orientation === 'vertical-up'
+      ? '↑'
+      : '→';
+  const reverseSymbol =
+    orientation === 'vertical'
+      ? '↑'
+      : orientation === 'vertical-up'
+      ? '↓'
+      : '←';
+
+  if (flow === 'forward') {
+    symbol = forwardSymbol;
+  } else if (flow === 'reverse') {
+    symbol = reverseSymbol;
+  }
+
+  if (icon) {
+    icon.textContent = symbol;
+  } else {
+    el.textContent = symbol;
+  }
+
+  if (text && label) {
+    text.textContent = label;
+  }
+
+  el.dataset.flow = flow || 'idle';
 };
 
 const showError = (message) => {
@@ -56,9 +90,53 @@ const renderData = (payload) => {
   setText('grid-export-value', `Value: ${formatCurrency(payload.grid_export_value, payload.currency || 'R')}`);
   setText('last-updated', payload.last_updated || 'pending');
 
-  setArrow('pv-arrow', payload.pv_watts > 0 ? 'Importing' : 'Idle');
-  setArrow('battery-arrow', payload.battery_direction);
-  setArrow('grid-arrow', payload.grid_direction);
+  setArrow(
+    'pv-arrow',
+    payload.pv_watts > 0 ? 'forward' : 'idle',
+    'horizontal',
+    payload.pv_watts > 0 ? 'PV to inverter' : 'PV idle'
+  );
+
+  const batteryFlow =
+    payload.battery_direction === 'Discharging'
+      ? 'forward'
+      : payload.battery_direction === 'Charging'
+      ? 'reverse'
+      : 'idle';
+  setArrow(
+    'battery-arrow',
+    batteryFlow,
+    'vertical-up',
+    batteryFlow === 'forward'
+      ? 'Battery to inverter'
+      : batteryFlow === 'reverse'
+      ? 'Charging from inverter'
+      : 'Battery idle'
+  );
+
+  const gridFlow =
+    payload.grid_direction === 'Importing'
+      ? 'forward'
+      : payload.grid_direction === 'Exporting'
+      ? 'reverse'
+      : 'idle';
+  setArrow(
+    'grid-arrow',
+    gridFlow,
+    'vertical',
+    gridFlow === 'forward'
+      ? 'Grid to inverter'
+      : gridFlow === 'reverse'
+      ? 'Exporting to grid'
+      : 'Grid idle'
+  );
+
+  setArrow(
+    'load-arrow',
+    payload.load_watts > 0 ? 'forward' : 'idle',
+    'horizontal',
+    payload.load_watts > 0 ? 'Inverter to load' : 'Load idle'
+  );
 };
 
 const scheduleRefresh = (delay) => {

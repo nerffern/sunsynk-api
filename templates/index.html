@@ -29,16 +29,29 @@
 
     <div id="status-banner" class="alert alert-danger d-none" role="alert"></div>
 
-    <section class="power-grid mb-4">
-        <div class="power-node">
+    <section class="power-layout mb-4">
+        <div class="power-node" id="pv-card">
             <div class="power-card">
                 <p class="text-uppercase small text-secondary mb-1">PV</p>
                 <p class="display-6 fw-semibold mb-1" id="pv-watts">-- W</p>
                 <p class="text-muted small" id="pv-direction">Generating</p>
             </div>
         </div>
-        <div class="power-connector" id="pv-arrow">→</div>
-        <div class="power-node">
+        <div class="power-node" id="grid-card">
+            <div class="power-card">
+                <p class="text-uppercase small text-secondary mb-1">Grid</p>
+                <p class="display-6 fw-semibold mb-1" id="grid-watts">-- W</p>
+                <p class="text-muted small" id="grid-direction">--</p>
+            </div>
+        </div>
+        <div class="power-node" id="load-card">
+            <div class="power-card highlight">
+                <p class="text-uppercase small text-secondary mb-1">Load</p>
+                <p class="display-6 fw-semibold mb-1" id="load-watts">-- W</p>
+                <p class="text-muted small">To home</p>
+            </div>
+        </div>
+        <div class="power-node" id="battery-card">
             <div class="power-card">
                 <p class="text-uppercase small text-secondary mb-1">Battery</p>
                 <p class="display-6 fw-semibold mb-1" id="battery-watts">-- W</p>
@@ -46,21 +59,27 @@
                 <div class="badge bg-secondary" id="battery-soc">SOC --%</div>
             </div>
         </div>
-        <div class="power-connector" id="battery-arrow">→</div>
-        <div class="power-node">
-            <div class="power-card">
-                <p class="text-uppercase small text-secondary mb-1">Grid</p>
-                <p class="display-6 fw-semibold mb-1" id="grid-watts">-- W</p>
-                <p class="text-muted small" id="grid-direction">--</p>
-            </div>
+
+        <div class="inverter-card text-center">
+            <img src="{{ url_for('static', filename='img/inverter.svg') }}" class="img-fluid inverter-image" alt="Inverter illustration">
+            <p class="text-muted small mb-0">Inverter core</p>
         </div>
-        <div class="power-connector" id="grid-arrow">→</div>
-        <div class="power-node">
-            <div class="power-card highlight">
-                <p class="text-uppercase small text-secondary mb-1">Load</p>
-                <p class="display-6 fw-semibold mb-1" id="load-watts">-- W</p>
-                <p class="text-muted small">To home</p>
-            </div>
+
+        <div class="flow-arrow horizontal from-pv" id="pv-arrow">
+            <span class="arrow-icon">→</span>
+            <span class="arrow-label">PV to inverter</span>
+        </div>
+        <div class="flow-arrow horizontal to-load" id="load-arrow">
+            <span class="arrow-icon">→</span>
+            <span class="arrow-label">Inverter to load</span>
+        </div>
+        <div class="flow-arrow vertical from-grid" id="grid-arrow">
+            <span class="arrow-icon">↓</span>
+            <span class="arrow-label">Grid to inverter</span>
+        </div>
+        <div class="flow-arrow vertical from-battery" id="battery-arrow">
+            <span class="arrow-icon">↑</span>
+            <span class="arrow-label">Battery assist</span>
         </div>
     </section>
 
