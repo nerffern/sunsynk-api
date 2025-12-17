@@ -1,0 +1,250 @@
+body {
+    background: radial-gradient(circle at 20% 10%, #233044, #0f1726 55%),
+        linear-gradient(145deg, rgba(58, 90, 142, 0.2), rgba(11, 21, 36, 0.6));
+    min-height: 100vh;
+    color: #e9eef7;
+}
+
+main {
+    position: relative;
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.08), transparent 45%),
+        radial-gradient(circle at 20% 70%, rgba(0, 196, 255, 0.06), transparent 40%);
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+main > * {
+    position: relative;
+    z-index: 1;
+}
+
+.power-layout {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(270px, 1fr));
+    grid-template-rows: repeat(3, minmax(180px, auto));
+    grid-template-areas:
+        ". grid ."
+        "pv inverter load"
+        ". battery .";
+    align-items: stretch;
+    justify-items: center;
+    gap: 1.5rem 2.75rem;
+    position: relative;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-inline: clamp(0.5rem, 2vw, 1.75rem);
+}
+
+#pv-card { grid-area: pv; }
+#grid-card { grid-area: grid; }
+#load-card { grid-area: load; }
+#battery-card { grid-area: battery; }
+.inverter-card { grid-area: inverter; }
+
+.power-node {
+    width: min(100%, 430px);
+}
+
+.power-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.2));
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.power-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+}
+
+.node-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    padding: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.2));
+}
+
+.node-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.pv-icon {
+    color: #ffd166;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 209, 102, 0.22), rgba(0, 0, 0, 0.2));
+    box-shadow: 0 12px 30px rgba(255, 209, 102, 0.2);
+}
+
+.grid-icon {
+    color: #4dd0e1;
+    background: radial-gradient(circle at 30% 30%, rgba(77, 208, 225, 0.24), rgba(0, 0, 0, 0.2));
+    box-shadow: 0 12px 30px rgba(77, 208, 225, 0.18);
+}
+
+.load-icon {
+    color: #4be7c4;
+    background: radial-gradient(circle at 30% 30%, rgba(75, 231, 196, 0.24), rgba(0, 0, 0, 0.2));
+    box-shadow: 0 12px 30px rgba(75, 231, 196, 0.2);
+}
+
+.battery-icon {
+    color: #8ae66e;
+    background: radial-gradient(circle at 30% 30%, rgba(138, 230, 110, 0.24), rgba(0, 0, 0, 0.2));
+    box-shadow: 0 12px 30px rgba(138, 230, 110, 0.18);
+}
+
+.power-card.highlight {
+    border-color: rgba(0, 196, 255, 0.5);
+    box-shadow: 0 16px 45px rgba(0, 196, 255, 0.2);
+}
+
+.inverter-card {
+    background: radial-gradient(circle at 50% 20%, rgba(13, 202, 240, 0.12), rgba(0, 0, 0, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.inverter-image {
+    max-width: 220px;
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+}
+
+.flow-arrow {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #0dcaf0;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+}
+
+.arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(13, 202, 240, 0.4);
+    background: rgba(13, 202, 240, 0.1);
+    box-shadow: 0 8px 22px rgba(13, 202, 240, 0.15);
+}
+
+.flow-arrow[data-flow="idle"] {
+    color: #6c757d;
+}
+
+.flow-arrow[data-flow="idle"] .arrow-icon {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: none;
+}
+
+.flow-arrow.horizontal.from-pv {
+    left: 32%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.flow-arrow.horizontal.to-load {
+    left: 68%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.flow-arrow.vertical.from-grid {
+    top: 8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.flow-arrow.vertical.from-battery {
+    bottom: 6%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.info-card {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    height: 100%;
+}
+
+.summary-stack {
+    display: grid;
+    gap: 0.85rem;
+}
+
+@media (min-width: 992px) {
+    .summary-stack {
+        position: sticky;
+        top: 96px;
+    }
+}
+
+.summary-stack .info-card {
+    height: auto;
+}
+
+#status-banner {
+    position: sticky;
+    top: 70px;
+    z-index: 1050;
+}
+
+@media (max-width: 992px) {
+    .power-layout {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-areas:
+            "grid"
+            "pv"
+            "inverter"
+            "load"
+            "battery";
+        position: relative;
+    }
+
+    .flow-arrow {
+        position: static;
+        justify-content: flex-start;
+        margin-top: -0.35rem;
+    }
+
+    .flow-arrow.horizontal.from-pv,
+    .flow-arrow.horizontal.to-load,
+    .flow-arrow.vertical.from-grid,
+    .flow-arrow.vertical.from-battery {
+        transform: none;
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+    }
+}
